@@ -41,8 +41,11 @@ public class Main {
 
 
   public static boolean isContained(int[] a, int[] b) {
-    return (a[0] >= b[0] && a[1] <= b[1]) ||
-        (a[0] <= b[0] && a[1] >= b[1]);
+    if (a[0] <= b[0]) {
+      return a[1] >= b[0];
+    } else {
+      return b[1] >= a[0];
+    }
   }
 
 }
