@@ -25,9 +25,9 @@ public class Main {
       );
 
     String line = br.readLine();
-    boolean loadCrates = false;
 
     Stack<String> layers = new Stack<>();
+
     do {
       layers.push(line);
     } while (!(line = br.readLine()).equals(""));
@@ -50,15 +50,20 @@ public class Main {
       int move = Integer.parseInt(order[1]);
       int from = Integer.parseInt(order[3]) - 1;
       int to = Integer.parseInt(order[5]) - 1;
+      Stack<Character> temp = new Stack<>();
 
       for (int i = 0; i < move; i++) {
-        piles[to].push(piles[from].pop());
+        temp.push(piles[from].pop());
+      }
+      while (!temp.isEmpty()) {
+        piles[to].push(temp.pop());
       }
     }
 
     for (Stack<Character> pile : piles) {
       System.out.print(pile.pop());
     }
+    System.out.println("");
   }
 
   public static void findCrates(String line) {
