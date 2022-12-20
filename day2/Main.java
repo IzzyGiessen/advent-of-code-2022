@@ -6,17 +6,18 @@ import java.io.File;
 import java.io.FileInputStream;
 
 public class Main {
+
   private static int[][] table = new int[][]{
-    {4, 8, 3},
+    {3, 4, 8},
     {1, 5, 9},
-    {7, 2, 6}
+    {2, 6, 7}
   };
 
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(
         new InputStreamReader(
           new FileInputStream(
-            new File("input/input.txt")
+            new File("input/sample")
           )
         )
       );
