@@ -1,11 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 public class Main {
 
@@ -19,22 +19,33 @@ public class Main {
       );
 
     int c = br.read();
+
     int count = 0;
-    LinkedList<Character> q = new LinkedList<Character>();
+    int sequence = 14;
+    LinkedHashSet<Character> q = new LinkedHashSet<Character>();
 
     do {
-      if (q.size() < 4) {
-        q.offer((char) c);
-      } else {
-        if ((new HashSet<Character>(q)).size() == q.size()) {
-          System.out.println(count);
-          return;
-        }
-        q.poll();
-        q.offer((char) c);
-      }
-
       count++;
+      char ch = (char) c;
+      if (q.contains(ch)) {
+        Iterator<Character> it = q.iterator();
+        while (it.hasNext()) {
+          char next = it.next();
+          if (next == ch) {
+            q = new LinkedHashSet<Character>();
+            while (it.hasNext()) {
+              q.add(it.next());
+            }
+            break;
+          }
+        }
+      }
+      q.add(ch);
+
+      if (q.size() == sequence) {
+        System.out.println(count);
+        return;
+      }
 
     } while ((c = br.read()) != -1);
 
