@@ -53,23 +53,28 @@ public class Main {
       }
     } while ((line = br.readLine()) != null);
 
-    Set<Tree> smallest = new HashSet<Tree>();
-    traverse(root, smallest, 100000);
-    long sum = 0;
-    for (Tree t : smallest) {
-      sum += t.size;
-    }
-    System.out.println(sum);
+    traverse(root);
+    Tree remove = new Tree("remove", root.size);
+    long freeUp = 30000000 - (70000000-root.size);
+    findRemoveNode(root, remove, freeUp);
+    System.out.println(remove.size);
   }
 
-  public static long traverse(Tree node, Set<Tree> smallest, long limit) {
+  public static long traverse(Tree node) {
     if (node.children.size() == 0) return node.size;
     for (String child : node.children.keySet()) {
-      node.size += traverse(node.children.get(child), smallest, limit);
-    }
-    if (node.size <= limit) {
-      smallest.add(node);
+      node.size += traverse(node.children.get(child));
     }
     return node.size;
+  }
+
+  public static void findRemoveNode(Tree node, Tree smallest, long limit) {
+    if (node.children.size() == 0) return;
+    if (node.size >= limit && node.size < smallest.size) {
+      smallest.size = node.size;
+    }
+    for (String child : node.children.keySet()) {
+      findRemoveNode(node.children.get(child), smallest, limit);
+    }
   }
 }
