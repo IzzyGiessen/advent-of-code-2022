@@ -41,10 +41,12 @@ public class Main {
       Tree t = forest.get(i);
       t.lookRight(); t.lookDown();
     }
-    int sum = 0;
+    int max = 0;
     for (int i = 0; i < forest.size(); i++) {
-      sum += forest.get(i).isVisible() ? 1 : 0;
+      Tree tree = forest.get(i);
+      int scenicScore = tree.getScenicScore();
+      max = scenicScore > max ? scenicScore : max;
     }
-    System.out.println(sum);
+    System.out.println(max);
   }
 }

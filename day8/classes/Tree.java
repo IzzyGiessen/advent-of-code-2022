@@ -2,6 +2,7 @@ public class Tree {
   public int height;
   public Tree left, right, top, bottom;
   public boolean l, r, t, b;
+  public int ll, rr, tt, bb;
 
   public Tree(int height, Tree left, Tree top) {
     this.height = height;
@@ -16,42 +17,62 @@ public class Tree {
 
   public void lookLeft() {
     if (left == null) return;
-    while (!left.l) {
-      left = left.left;
+    Tree tree = left;
+    while (!tree.l && height > tree.height) {
+      tree = tree.left;
+      ll++;
     }
-    l = height > left.height;
+    ll++;
+    l = height > tree.height;
+    ll += l ? tree.ll : 0;
   }
 
   public void lookUp() {
     if (top == null) return;
-    while (!top.t) {
-      top = top.top;
+    Tree tree = top;
+    while (!tree.t && height > tree.height) {
+      tree = tree.top;
+      tt++;
     }
-    t = height > top.height;
+    tt++;
+    t = height > tree.height;
+    tt += t ? tree.tt : 0;
   }
 
   public void lookRight() {
     if (right == null) return;
-    while (!right.r) {
-      right = right.right;
+    Tree tree = right;
+    while (!tree.r && height > tree.height) {
+      tree = tree.right;
+      rr++;
     }
-    r = height > right.height;
+    rr++;
+    r = height > tree.height;
+    rr += r ? tree.rr : 0;
   }
 
   public void lookDown() {
     if (bottom == null) return;
-    while (!bottom.b) {
-      bottom = bottom.bottom;
+    Tree tree = bottom;
+    while (!tree.b && height > tree.height) {
+      tree = tree.bottom;
+      bb++;
     }
-    b = height > bottom.height;
+    bb++;
+    b = height > tree.height;
+    bb += b ? tree.bb : 0;
   }
 
   public boolean isVisible() {
     return l || r || t || b;
   }
 
+  public int getScenicScore() {
+    return ll * rr * tt * bb;
+  }
+
   @Override
   public String toString() {
-    return String.valueOf(isVisible());
+    return String.valueOf(getScenicScore());
   }
 }
