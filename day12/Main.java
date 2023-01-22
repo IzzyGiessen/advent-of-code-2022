@@ -18,9 +18,11 @@ public class Main {
       );
     String line = br.readLine();
 
+    List<Graph> bottoms = new ArrayList<Graph>();
+    List<List<Graph>> map = new ArrayList<List<Graph>>();
     Graph start = new Graph('a');
     Graph end = new Graph('z');
-    List<List<Graph>> map = new ArrayList<List<Graph>>();
+    bottoms.add(start);
     do {
       List<Graph> row = new ArrayList<Graph>();
       for (char c : line.toCharArray()) {
@@ -28,6 +30,10 @@ public class Main {
           row.add(start);
         } else if (c == 'E') {
           row.add(end);
+        } else if (c == 'a') {
+          Graph a = new Graph(c);
+          bottoms.add(a);
+          row.add(a);
         } else {
           row.add(new Graph(c));
         }
@@ -48,7 +54,12 @@ public class Main {
       }
     }
 
-    System.out.println(Graph.dijkstra(start, end));
+    List<Integer> starts = new ArrayList<Integer>();
+
+    for (Graph bottom : bottoms) {
+      starts.add(Graph.dijkstra(bottom, end));
+    }
+    System.out.println(Collections.min(starts));
   }
 
 }
