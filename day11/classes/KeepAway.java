@@ -27,6 +27,12 @@ public class KeepAway {
     }
   }
 
+  public void addLCM(long lcm) {
+    for (Monkey monkey : monkeys) {
+      monkey.addLCM(lcm);
+    }
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
