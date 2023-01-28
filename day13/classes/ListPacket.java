@@ -17,7 +17,7 @@ public class ListPacket extends Packet {
     addValue(i);
   }
 
-  public ListPacket(List content) {
+  public ListPacket(List<Packet> content) {
     this.content = content;
   }
 
@@ -46,5 +46,17 @@ public class ListPacket extends Packet {
     }
     sb.append("],");
     return sb.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null) return false;
+    if (!(o instanceof ListPacket p)) return false;
+    return content.equals(p.content);
+  }
+
+  @Override
+  public int hashCode() {
+    return content.hashCode();
   }
 }

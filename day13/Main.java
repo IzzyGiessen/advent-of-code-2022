@@ -18,8 +18,7 @@ public class Main {
       );
     String line = br.readLine();
 
-    List<Signal> signals = new ArrayList<Signal>();
-    List<Packet> pair = new ArrayList<Packet>();
+    List<Packet> packets = new ArrayList<Packet>();
     do {
       if (line.equals(""))
         continue;
@@ -48,21 +47,17 @@ public class Main {
         }
       }
       ListPacket fullList = (ListPacket) currentList.get(0);
-      pair.add(fullList);
-
-      if (pair.size() == 2) {
-        signals.add(new Signal(pair.get(0), pair.get(1)));
-        pair.clear();
-      }
+      packets.add(fullList);
     } while ((line = br.readLine()) != null);
 
-    int sum = 0;
-    for (int i = 0; i < signals.size(); i++) {
-      Signal signal = signals.get(i);
-      System.out.println(signal);
-      sum += signal.isOrdered() ? i+1 : 0;
-    }
-    System.out.println(sum);
+    Collections.sort(packets);
+    ListPacket div1 = new ListPacket();
+    div1.addList(new ListPacket(2));
+    ListPacket div2 = new ListPacket();
+    div2.addList(new ListPacket(6));
+    int index1 = packets.indexOf(div1) + 1;
+    int index2 = packets.indexOf(div2) + 1;
+    System.out.println(index1 * index2);
   }
 
 }

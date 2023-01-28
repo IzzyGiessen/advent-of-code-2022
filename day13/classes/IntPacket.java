@@ -15,4 +15,16 @@ public class IntPacket extends Packet {
   public String toString() {
     return value + ",";
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null) return false;
+    if (!(o instanceof IntPacket p)) return false;
+    return value == p.value;
+  }
+
+  @Override
+  public int hashCode() {
+    return value;
+  }
 }
