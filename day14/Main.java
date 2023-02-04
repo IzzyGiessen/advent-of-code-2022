@@ -32,7 +32,12 @@ public class Main {
       }
     } while ((line = br.readLine()) != null);
 
+    map.drawGround();
+    int i = 0;
     while(map.step()) {
+      if (i++ < 10) {
+        //System.out.println(map);
+      }
     }
     System.out.println(map.getCount());
   }

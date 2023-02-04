@@ -7,6 +7,7 @@ public class Scan {
   private Point sand;
   private int count;
   private boolean rest;
+  private int floor;
 
   public Scan() {
     columns = new HashMap<>();
@@ -38,35 +39,79 @@ public class Scan {
     }
   }
 
+  public void drawGround() {
+    int lowest = 0;
+    for (int col : columns.keySet()) {
+      if (columns.get(col).first() > lowest) {
+        lowest = columns.get(col).first();
+      }
+    }
+    this.floor = lowest + 2;
+    for (int col : columns.keySet()) {
+      columns.get(col).add(floor);
+    }
+  }
+
   public boolean step() {
     TreeSet<Integer> column = columns.get(sand.x);
-    if (column == null || column.lower(sand.y) == null)
-      return false;
+    if (column == null || column.lower(sand.y) == null) {
+      column = new TreeSet<Integer>(Collections.reverseOrder());
+      column.add(floor);
+      columns.put(sand.x, column);
+    }
     sand.y = column.lower(sand.y) - 1;
     if (!move()) {
+      count++;
+      if (sand.x == 500 && sand.y == 0) return false;
+      //System.out.println(sand.x + ", " + sand.y);
       columns.get(sand.x).add(sand.y);
       sand.x = 500;
       sand.y = 0;
-      count++;
     }
     return true;
   }
 
   public boolean move() {
-    Integer left = columns.get(sand.x-1) == null ?
-      sand.y+2 : columns.get(sand.x-1).lower(sand.y) == null ?
-      sand.y+2 : columns.get(sand.x-1).lower(sand.y);
-    Integer right = columns.get(sand.x+1) == null ?
-      sand.y+2 : columns.get(sand.x+1).lower(sand.y) == null ?
-      sand.y+2 : columns.get(sand.x+1).lower(sand.y);
-    if (left == null || left > sand.y+1) {
+    TreeSet<Integer> leftColumn = columns.get(sand.x-1);
+    TreeSet<Integer> rightColumn = columns.get(sand.x+1);
+    if (leftColumn == null) {
+      leftColumn = new TreeSet<Integer>(Collections.reverseOrder());
+      leftColumn.add(floor);
+      columns.put(sand.x-1, leftColumn);
+    }
+    if (rightColumn == null) {
+      rightColumn = new TreeSet<Integer>(Collections.reverseOrder());
+      rightColumn.add(floor);
+      columns.put(sand.x+1, rightColumn);
+    }
+    int left = leftColumn.lower(sand.y);
+    int right = rightColumn.lower(sand.y);
+    if (left > sand.y+1) {
       sand.x -= 1;
       return true;
-    } else if (right == null || right > sand.y+1) {
+    } else if (right > sand.y+1) {
       sand.x += 1;
       return true;
     } else {
       return false;
     }
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    //sb.append("   123456789");
+    for (int i = 0; i <= floor; i++) {
+      sb.append(i + "  ");
+      for (int col : columns.keySet()) {
+        if (columns.get(col).contains(i)) {
+          sb.append("#");
+        } else {
+          sb.append(".");
+        }
+      }
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 }
