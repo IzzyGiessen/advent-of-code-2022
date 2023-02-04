@@ -15,28 +15,34 @@ public class Area {
     sensors.add(sensor);
   }
 
-  public int notPresentCount(int row) {
+  public Point notPresentCount() {
     int count = 0;
-    int minX = 0;
-    int maxX = 0;
-    for (Sensor s : sensors) {
-      minX = Math.min(minX, s.x - s.beaconDistance());
-      maxX = Math.max(maxX, s.x + s.beaconDistance());
-    }
-    for (int x = minX; x <= maxX; x++) {
-      count += isPresent(new Point(x, row)) ? 1 : 0;
-    }
-    return count;
-  }
-
-  public boolean isPresent(Point p) {
-    for (Sensor s : sensors) {
-      int dis = p.distance(s);
-      if (dis <= s.beaconDistance() && !p.equals(s.beacon)) {
-        return true;
+    int min = 0;
+    int max = 4000000;
+    for (int y = min; y <= max; y++) {
+      for (int x = min; x <= max; x++) {
+        int add = isPresent(new Point(x, y));
+        if (add == -1) {
+          return new Point(x, y);
+        }
+        x += add;
       }
     }
-    return false;
+    return null;
+  }
+
+  public int isPresent(Point p) {
+    for (Sensor s : sensors) {
+      int dis = p.distance(s);
+      if (dis <= s.beaconDistance()) {
+        if (p.x - s.x > 0) {
+          return (p.x - s.x) * 2;
+        } else {
+          return (s.beaconDistance() - Math.abs(p.y - s.y)) - p.x + s.x;
+        }
+      }
+    }
+    return -1;
   }
 
 }

@@ -24,7 +24,8 @@ public class Main {
       area.addSensor(s);
     } while ((line = br.readLine()) != null);
 
-    System.out.println(area.notPresentCount(2000000));
+    Point res = area.notPresentCount();
+    System.out.println((long)res.x*4000000l + res.y);
   }
 
 }

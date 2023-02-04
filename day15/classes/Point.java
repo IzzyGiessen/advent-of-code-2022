@@ -19,4 +19,5 @@ public class Point {
     if (!(o instanceof Point p)) return false;
     return x == p.x && y == p.y;
   }
+
 }
