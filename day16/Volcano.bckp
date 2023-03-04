@@ -9,7 +9,6 @@ public class Volcano {
   private Map<String, Map<Set<String>, Map<Integer, Integer>>> pressures;
   private Map<String, Map<String, Path>> paths;
   private Set<String> all;
-  private int count = 0;
 
   public Volcano() {
     valves = new HashMap();
@@ -26,43 +25,71 @@ public class Volcano {
       fillPaths(s);
     }
     setAll();
-    LinkedList<String> list = new LinkedList();
-    list.offer("AA");
-    int res = force(list, 30, Math.min(15, all.size()));
-
-    System.out.println(count);
-    return res;
+    return getPressure("AA", new HashSet<String>(), 30);
   }
 
-  private int force(LinkedList<String> vis, int t, int size) {
-    if (size == 0 || t <= 2) {
-      count++;
-      int time = 30;
-      int score = 0;
-      LinkedList<String> copy = new LinkedList(vis);
-      String previous = copy.poll();
-      LinkedList<Integer> scores = new LinkedList();
-      while (!copy.isEmpty()) {
-        String next = copy.poll();
-        int dist = paths.get(previous).get(next).dist;
-        // minus distance and 1 to open the valve
-        time -= dist + 1;
-        if (time <= 0) break;
-        int add = time * valves.get(next).getFlow();
-        score += add;
-        previous = next;
+  public int getPressure(String me, String el, Set<String> visited, int time) {
+    Valve curr = valves.get(me);
+    Valve elep = valves.get(el);
+    if (time < 2) return 0;
+    if (time == 2) return curr.getFlow();
+    if (time > 24) System.out.println("Yee");
+    Set<String> vis = new HashSet<>(visited);
+    vis.add(me);
+    vis.add(el);
+
+    if (pressures.get(me) == null) pressures.put(me, new HashMap());
+    if (pressures.get(me).get(visited) == null)
+      pressures.get(me).put(visited, new HashMap());
+    if (pressures.get(me).get(visited).containsKey(time)) {
+      return pressures.get(me).get(visited).get(time);
+    }
+    if (pressures.get(el) == null) pressures.put(el, new HashMap());
+    if (pressures.get(el).get(visited) == null)
+      pressures.get(el).put(visited, new HashMap());
+    if (pressures.get(el).get(visited).containsKey(time)) {
+      return pressures.get(el).get(visited).get(time);
+    }
+
+    int startTime = time;
+    int maxme = 0;
+    int maxel = 0;
+    int secel = 0;
+    if (!current.equals("AA")) {
+      time--;
+      maxme = (time) * curr.getFlow();
+      maxel = (secel = (time) * curr.getFlow());
+    }
+    Map<String, Path> pathsme = paths.get(me);
+    Set<String> filtme = filterPaths(pathsme, vis);
+    String resme = "";
+    for (String valve : filtme) {
+      int r = ret + getPressure(valve, vis, time - paths.get(me).get(valve).dist);
+      if (r > maxme) {
+        maxme = r;
+        resme = valve;
       }
-      return score;
     }
-    int max = 0;
-    String last = vis.getLast();
-    Set<String> filtered = filterPaths(paths.get(last), new HashSet(vis));
-    for (String s : filtered) {
-      if (vis.contains(s)) continue;
-      vis.offer(s);
-      max = Math.max(max, force(vis, t-paths.get(last).get(s).dist-1, size-1));
-      vis.pollLast();
+    pressures.get(current).get(visited).put(startTime, max);
+
+    Map<String, Path> pathsel = paths.get(el);
+    Set<String> filtel = filterPaths(pathsel, vis);
+    String resel = "";
+    for (String valve : filtel) {
+      int r = ret + getPressure(valve, vis, time - paths.get(current).get(valve).dist);
+      if (r > maxel) {
+        secel = maxel;
+        maxel = r;
+        resel = valve;
+      }
     }
+    int result = maxme + ;
+    if (resel.equals(resme)) {
+
+    }
+    pressures.get(me).get(visited).put(startTime, maxme);
+    pressures.get(el).get(visited).put(startTime, maxel);
+
     return max;
   }
 
